@@ -1,10 +1,37 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import tmdb from "../api/tmdb"; // Import the Axios instance
+import { Heart } from "lucide-react"; // Lucide for heart icon
+import tmdb from "../api/tmdb";
 
 const MovieCard = ({ movie }) => {
+  // MovieCard.jsx needs proper API integration:
+const handleAddToFavourites = async () => {
+  try {
+    await axios.post("/favorites/", {
+      movie_id: movie.id,
+      movie_title: movie.title,
+      movie_poster: movie.poster_path
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`
+      }
+    });
+  } catch (error) {
+    console.error("Failed to add favorite:", error);
+  }
+};
+
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
+    <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
+      {/* Add to Favourites Icon */}
+      <button
+        onClick={handleAddToFavourites}
+        className="absolute top-2 right-2 bg-white dark:bg-gray-700 text-red-500 p-2 rounded-full shadow hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+        title="Add to Favourites"
+      >
+        <Heart className="w-5 h-5" />
+      </button>
+
       <img
         className="w-full rounded-lg"
         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -26,7 +53,7 @@ const MovieCard = ({ movie }) => {
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark" ? true : false
+    localStorage.getItem("theme") === "dark"
   );
 
   const [animateLinks, setAnimateLinks] = useState(false);
@@ -37,8 +64,8 @@ const Home = () => {
 
     const fetchTrendingMovies = async () => {
       try {
-        const response = await tmdb.get("/trending/movie/week"); // API call
-        setMovies(response.data.results); // Store movie data in state
+        const response = await tmdb.get("/trending/movie/week");
+        setMovies(response.data.results);
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
@@ -46,10 +73,9 @@ const Home = () => {
 
     fetchTrendingMovies();
 
-    // Trigger animation after component mounts
     setTimeout(() => {
       setAnimateLinks(true);
-    }, 300); // Small delay for a smoother effect
+    }, 300);
   }, [darkMode]);
 
   return (
@@ -63,7 +89,6 @@ const Home = () => {
         <span
           className={`inline-block transition-transform duration-300 ${
             darkMode ? "animate-spin" : ""
-
           }`}
         >
           {darkMode ? "🌙" : "☀️"}
@@ -83,8 +108,7 @@ const Home = () => {
             Discover <span className="text-blue-400">Epic Movies</span>
           </h1>
           <p className="mt-4 text-lg md:text-xl font-light text-gray-300">
-            Explore thousands of movies, TV shows, and exclusive content at your
-            fingertips.
+            Explore thousands of movies, TV shows, and exclusive content at your fingertips.
           </p>
           <div
             className={`mt-6 flex flex-col sm:flex-row gap-4 justify-center transition-transform duration-700 ${
@@ -117,74 +141,74 @@ const Home = () => {
       </div>
 
       {/* About Section */}
-<div className="p-6 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-6">
-  <div className="md:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-    <h2 className="text-3xl font-bold mb-4 text-center md:text-left text-gray-900 dark:text-white">
-      Why Choose Movie Explorer?
-    </h2>
-    <ul className="space-y-3 text-sm md:text-lg text-gray-700 dark:text-gray-300">
-      {[
-        "Get real-time trending movies",
-        "Explore thousands of films and TV shows",
-        "Detailed movie descriptions & ratings",
-        "Stay updated with the latest releases",
-        "Browse movies from all genres and regions",
-      ].map((text, index) => (
-        <li
-  key={index}
-  className="flex items-center gap-3 group relative p-2 rounded-lg transition duration-300 hover:bg-blue-50 dark:hover:bg-gray-700/40"
->
-  <div className="relative w-8 h-8">
-    <svg
-      className="w-full h-full z-10 relative group-hover:scale-125 group-hover:-translate-y-1 transition-transform duration-300"
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Circle Stroke Animation */}
-      <circle
-        cx="50"
-        cy="50"
-        r="45"
-        stroke="#22c55e" // Tailwind green-500
-        strokeWidth="6"
-        strokeDasharray="282.743" // Circumference = 2πr = 2*π*45
-        strokeDashoffset="282.743"
-        className="group-hover:animate-draw-circle"
-      />
-      {/* Checkmark Path */}
-      <path
-        d="M30 52 L45 67 L70 35"
-        stroke="#22c55e"
-        strokeWidth="8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  </div>
-  <span className="transition duration-300 group-hover:text-green-600 dark:group-hover:text-green-400">
-    {text}
-  </span>
-</li>
+      <div className="p-6 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-6">
+        <div className="md:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold mb-4 text-center md:text-left text-gray-900 dark:text-white">
+            Why Choose Movie Explorer?
+          </h2>
+          <ul className="space-y-3 text-sm md:text-lg text-gray-700 dark:text-gray-300">
+            {[
+              "Get real-time trending movies",
+              "Explore thousands of films and TV shows",
+              "Detailed movie descriptions & ratings",
+              "Stay updated with the latest releases",
+              "Browse movies from all genres and regions",
+            ].map((text, index) => (
+              <li
+                key={index}
+                className="flex items-center gap-3 group relative p-2 rounded-lg transition duration-300 hover:bg-blue-50 dark:hover:bg-gray-700/40"
+              >
+                <div className="relative w-8 h-8">
+                  <svg
+                    className="w-full h-full z-10 relative group-hover:scale-125 group-hover:-translate-y-1 transition-transform duration-300"
+                    viewBox="0 0 100 100"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="#22c55e"
+                      strokeWidth="6"
+                      strokeDasharray="282.743"
+                      strokeDashoffset="282.743"
+                      className="group-hover:animate-draw-circle"
+                    />
+                    <path
+                      d="M30 52 L45 67 L70 35"
+                      stroke="#22c55e"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+                <span className="transition duration-300 group-hover:text-green-600 dark:group-hover:text-green-400">
+                  {text}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      ))}
-    </ul>
-  </div>
-
-
-        {/* Illustration */}
         <div className="md:w-1/2 flex justify-end">
           <img
             src="/asset1.png"
             alt="Movie Illustration"
-            className="w-full max-w-xs md:max-w-sm max-h-[300px] md:max-h-[350px] object-contain 
-             transition duration-500 ease-in-out 
-             filter drop-shadow-lg 
-             hover:drop-shadow-[0_0_25px_rgba(0,123,255,0.6)] 
-             hover:rotate-3 hover:scale-105"
+            className="w-full max-w-xs md:max-w-sm max-h-[300px] md:max-h-[350px] object-contain transition duration-500 ease-in-out filter drop-shadow-lg hover:drop-shadow-[0_0_25px_rgba(0,123,255,0.6)] hover:rotate-3 hover:scale-105"
           />
         </div>
+      </div>
+
+      <div className="p-6 text-center">
+        <Link
+          to="/edit-favourites"
+          className="inline-block px-6 py-3 text-lg font-medium bg-green-500 hover:bg-green-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
+        >
+          Edit My Favourites
+        </Link>
       </div>
 
       {/* Trending Movies Section */}

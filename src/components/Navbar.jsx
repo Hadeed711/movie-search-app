@@ -41,28 +41,26 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         MovieApp
       </Link>
 
-    {/* Hamburger Icon with Full Cross Animation */}
-<div className="md:hidden">
-  <button
-    onClick={() => setMenuOpen(!menuOpen)}
-    className="relative w-8 h-8 flex items-center justify-center"
-  >
-    <span
-      className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
+      {/* Hamburger Icon with Full Cross Animation */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="relative w-8 h-8 flex items-center justify-center"
+        >
+          <span
+            className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
         ${menuOpen ? "rotate-45" : "-translate-y-2"}`}
-    />
-    <span
-      className={`absolute w-6 h-0.5 bg-current transition-opacity duration-200 
+          />
+          <span
+            className={`absolute w-6 h-0.5 bg-current transition-opacity duration-200 
         ${menuOpen ? "opacity-0" : "opacity-100"}`}
-    />
-    <span
-      className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
+          />
+          <span
+            className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
         ${menuOpen ? "-rotate-45" : "translate-y-2"}`}
-    />
-  </button>
-</div>
-
-
+          />
+        </button>
+      </div>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex space-x-6 items-center">
@@ -71,6 +69,15 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full"
         >
           Home
+        </Link>
+        <Link to="/contact" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
+          Contact Us
+        </Link>
+        <Link to="/SignUp" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
+          SignUp
+        </Link>
+        <Link to="/SignIn" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
+          SignIn
         </Link>
 
         <Link
@@ -98,9 +105,15 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           className="p-2 rounded-full transition-all duration-300"
         >
           {darkMode ? (
-            <FaSun className="text-yellow-400 animate-spin-slow hover:animate-none" size={22} />
+            <FaSun
+              className="text-yellow-400 animate-spin-slow hover:animate-none"
+              size={22}
+            />
           ) : (
-            <FaMoon className="text-gray-700 transition-transform duration-300 hover:rotate-[200deg]" size={22} />
+            <FaMoon
+              className="text-gray-700 transition-transform duration-300 hover:rotate-[200deg]"
+              size={22}
+            />
           )}
         </button>
 
@@ -127,8 +140,12 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="w-full mt-4 flex flex-col gap-4 md:hidden">
-          <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>About Me</Link>
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/about" onClick={() => setMenuOpen(false)}>
+            About Me
+          </Link>
           <a
             href="https://github.com/your-repo-link"
             target="_blank"
@@ -146,7 +163,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             }}
             className="flex items-center gap-2"
           >
-            {darkMode ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-700" />}
+            {darkMode ? (
+              <FaSun className="text-yellow-400" />
+            ) : (
+              <FaMoon className="text-gray-700" />
+            )}
             <span>Toggle Theme</span>
           </button>
           <form onSubmit={handleSearch} className="flex flex-col gap-2">

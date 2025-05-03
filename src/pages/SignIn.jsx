@@ -9,10 +9,15 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/login", formData);
-      navigate("/dashboard"); // or homepage after login
+      const response = await axios.post("/token/", {  // Changed endpoint
+        username: formData.email,  // Django expects username
+        password: formData.password
+      });
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
+      navigate("/");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login failed:", error.response?.data);
     }
   };
 

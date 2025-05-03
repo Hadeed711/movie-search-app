@@ -7,6 +7,11 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import About from "./pages/About";
+import ContactUs from "./pages/ContactUs";
+import EditFavourites from "./pages/EditFavourites";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(
@@ -34,6 +39,10 @@ function App() {
             <Route path="/search/:query" element={<SearchResults darkMode={darkMode} />} />
             <Route path="/about" element={<About darkMode={darkMode} />} />
             <Route path="*" element={<NotFound darkMode={darkMode}/>} />
+            <Route path="/contact" element={<ContactUs darkMode={darkMode} />} />
+            <Route path="/SignIn" element={<SignIn darkMode={darkMode} />} />
+            <Route path="/SignUp" element={<SignUp darkMode={darkMode} />} />
+            <Route path="/EditFavourites" element={<EditFavourites darkMode={darkMode} />} />
           </Routes>
         </div>
         <Footer darkMode={darkMode} />
