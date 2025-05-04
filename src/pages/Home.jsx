@@ -2,61 +2,25 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart } from "lucide-react"; // Lucide for heart icon
 import tmdb from "../api/tmdb";
-
-const MovieCard = ({ movie }) => {
-  // MovieCard.jsx needs proper API integration:
-const handleAddToFavourites = async () => {
-  try {
-    await axios.post("/favorites/", {
-      movie_id: movie.id,
-      movie_title: movie.title,
-      movie_poster: movie.poster_path
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`
-      }
-    });
-  } catch (error) {
-    console.error("Failed to add favorite:", error);
-  }
-};
-
-  return (
-    <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
-      {/* Add to Favourites Icon */}
-      <button
-        onClick={handleAddToFavourites}
-        className="absolute top-2 right-2 bg-white dark:bg-gray-700 text-red-500 p-2 rounded-full shadow hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-        title="Add to Favourites"
-      >
-        <Heart className="w-5 h-5" />
-      </button>
-
-      <img
-        className="w-full rounded-lg"
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-        alt={movie.title}
-      />
-      <h3 className="text-gray-900 dark:text-white text-lg mt-2 font-semibold">
-        {movie.title}
-      </h3>
-      <Link
-        to={`/movie/${movie.id}`}
-        className="text-blue-500 dark:text-blue-400 mt-2 block hover:underline"
-      >
-        View Details
-      </Link>
-    </div>
-  );
-};
+import axios from "../api/axios"; // Make sure this points to your configured axios instance
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
-
   const [animateLinks, setAnimateLinks] = useState(false);
+
+  // Fetch favorites to know which movies are already favorites
+  const fetchFavorites = async () => {
+    try {
+      const response = await axios.get('/favorites/');
+      setFavorites(response.data);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -72,11 +36,75 @@ const Home = () => {
     };
 
     fetchTrendingMovies();
+    fetchFavorites();
 
     setTimeout(() => {
       setAnimateLinks(true);
     }, 300);
   }, [darkMode]);
+
+  // MovieCard component (inline as in your original code)
+  const MovieCard = ({ movie }) => {
+    // Check if this movie is already in favorites
+    const isFavorite = favorites.some(fav => fav.movie_id === movie.id.toString());
+
+    const handleToggleFavorite = async () => {
+      try {
+        if (isFavorite) {
+          // Find the favorite to delete it
+          const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
+          if (favorite) {
+            await axios.delete(`/favorites/${favorite.id}/`);
+            // Update local state
+            setFavorites(prevFavorites => 
+              prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
+            );
+          }
+        } else {
+          // Add to favorites
+          const response = await axios.post("/favorites/", {
+            movie_id: movie.id.toString(),
+            movie_title: movie.title,
+            movie_poster: movie.poster_path
+          });
+          // Update local state
+          setFavorites(prevFavorites => [...prevFavorites, response.data]);
+        }
+      } catch (error) {
+        console.error("Failed to toggle favorite:", error);
+      }
+    };
+
+    return (
+      <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
+        {/* Add to Favourites Icon */}
+        <button
+          onClick={handleToggleFavorite}
+          className={`absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow hover:bg-gray-100 dark:hover:bg-gray-600 transition ${
+            isFavorite ? "text-red-500" : "text-gray-400"
+          }`}
+          title={isFavorite ? "Remove from Favourites" : "Add to Favourites"}
+        >
+          <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
+        </button>
+
+        <img
+          className="w-full rounded-lg"
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title}
+        />
+        <h3 className="text-gray-900 dark:text-white text-lg mt-2 font-semibold">
+          {movie.title}
+        </h3>
+        <Link
+          to={`/movie/${movie.id}`}
+          className="text-blue-500 dark:text-blue-400 mt-2 block hover:underline"
+        >
+          View Details
+        </Link>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen transition-colors duration-300">
@@ -204,7 +232,7 @@ const Home = () => {
 
       <div className="p-6 text-center">
         <Link
-          to="/edit-favourites"
+          to="/EditFavourites"
           className="inline-block px-6 py-3 text-lg font-medium bg-green-500 hover:bg-green-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
         >
           Edit My Favourites

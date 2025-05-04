@@ -49,15 +49,15 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         >
           <span
             className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
-        ${menuOpen ? "rotate-45" : "-translate-y-2"}`}
+            ${menuOpen ? "rotate-45" : "-translate-y-2"}`}
           />
           <span
             className={`absolute w-6 h-0.5 bg-current transition-opacity duration-200 
-        ${menuOpen ? "opacity-0" : "opacity-100"}`}
+            ${menuOpen ? "opacity-0" : "opacity-100"}`}
           />
           <span
             className={`absolute w-6 h-0.5 bg-current transition-transform duration-300 ease-in-out 
-        ${menuOpen ? "-rotate-45" : "translate-y-2"}`}
+            ${menuOpen ? "-rotate-45" : "translate-y-2"}`}
           />
         </button>
       </div>
@@ -66,24 +66,14 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       <div className="hidden md:flex space-x-6 items-center">
         <Link
           to="/"
-          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
         >
           Home
         </Link>
-        <Link to="/contact" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
+        <Link to="/contact" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
           Contact Us
         </Link>
-        <Link to="/SignUp" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
-          SignUp
-        </Link>
-        <Link to="/SignIn" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full">
-          SignIn
-        </Link>
-
-        <Link
-          to="/about"
-          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300 after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-500 dark:after:bg-blue-300 after:transition-all after:duration-300 hover:after:w-full"
-        >
+        <Link to="/about" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
           About Me
         </Link>
 
@@ -139,9 +129,12 @@ const Navbar = ({ darkMode, setDarkMode }) => {
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="w-full mt-4 flex flex-col gap-4 md:hidden">
+        <div className="w-full mt-4 flex flex-col gap-4 md:hidden px-4 py-2">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             Home
+          </Link>
+          <Link to="/contact" onClick={() => setMenuOpen(false)}>
+            Contact Us
           </Link>
           <Link to="/about" onClick={() => setMenuOpen(false)}>
             About Me
