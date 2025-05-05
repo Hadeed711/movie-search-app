@@ -16,13 +16,7 @@ const ContactUs = ({ darkMode }) => {
     setError('');
 
     try {
-      // Direct HTTP request to avoid HTTPS issues
-      const response = await axios.post('/contact/', { 
-        name, 
-        email, 
-        message 
-      });
-      
+      const response = await axios.post('/contact/', { name, email, message });
       console.log("Response:", response.data);
       setSuccess(true);
       setName('');
@@ -30,21 +24,6 @@ const ContactUs = ({ darkMode }) => {
       setMessage('');
     } catch (err) {
       console.error("Error sending message:", err);
-      
-      // Enhanced error logging
-      if (err.response) {
-        // Server responded with a status code outside of 2xx range
-        console.error("Response data:", err.response.data);
-        console.error("Response status:", err.response.status);
-        console.error("Response headers:", err.response.headers);
-      } else if (err.request) {
-        // Request was made but no response was received
-        console.error("No response received:", err.request);
-      } else {
-        // Something else caused the error
-        console.error("Error:", err.message);
-      }
-      
       setError('❌ Failed to send message. Please try again.');
     } finally {
       setLoading(false);
@@ -52,66 +31,108 @@ const ContactUs = ({ darkMode }) => {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
-      <div className="max-w-2xl mx-auto mt-12 bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4 text-center">Contact Us</h2>
-        <p className="mb-6 text-center">
-          We'd love to hear from you! Please fill out the form below.
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-100 via-white to-pink-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500 overflow-hidden">
+      
+      {/* Animated Background Blobs */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-purple-300 dark:bg-purple-900 opacity-30 rounded-full mix-blend-multiply filter blur-2xl animate-blob"></div>
+      <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-300 dark:bg-yellow-700 opacity-30 rounded-full mix-blend-multiply filter blur-2xl animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-300 dark:bg-pink-700 opacity-30 rounded-full mix-blend-multiply filter blur-2xl animate-blob animation-delay-4000"></div>
+
+      <div className="max-w-2xl mx-auto mt-20 bg-white dark:bg-gray-800 p-10 rounded-xl shadow-xl transform transition-all animate-fade-in-up">
+        <h2 className="text-4xl font-bold text-center mb-4 text-gray-800 dark:text-white">
+          Get in Touch
+        </h2>
+        <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
+          Have any questions? Drop us a message!
         </p>
 
-        {loading && (
-          <div className="text-blue-500 mb-2 text-center">Sending...</div>
-        )}
+        {/* Success & Error */}
+        {loading && <div className="text-blue-500 mb-3 animate-pulse text-center">Sending...</div>}
+        {success && <div className="text-green-500 mb-3 animate-fade-in text-center">✅ Message sent successfully!</div>}
+        {error && <div className="text-red-500 mb-3 animate-fade-in text-center">{error}</div>}
 
-        {success && (
-          <div className="text-green-500 mb-2 text-center">
-            ✅ Message sent successfully!
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {/* Input Fields with Floating Labels */}
+          {[
+            { id: 'name', value: name, setter: setName, type: 'text', label: 'Your Name' },
+            { id: 'email', value: email, setter: setEmail, type: 'email', label: 'Your Email' }
+          ].map(({ id, value, setter, type, label }) => (
+            <div className="relative group" key={id}>
+              <input
+                id={id}
+                type={type}
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                required
+                className="w-full px-4 pt-6 pb-2 text-sm bg-transparent border-b-2 border-gray-400 dark:border-gray-600 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 peer"
+              />
+              <label
+                htmlFor={id}
+                className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm dark:text-gray-400"
+              >
+                {label}
+              </label>
+            </div>
+          ))}
+
+          <div className="relative group">
+            <textarea
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              rows="5"
+              placeholder=" "
+              className="w-full px-4 pt-6 pb-2 text-sm bg-transparent border-b-2 border-gray-400 dark:border-gray-600 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 peer resize-none"
+            />
+            <label
+              htmlFor="message"
+              className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm dark:text-gray-400"
+            >
+              Your Message
+            </label>
           </div>
-        )}
-
-        {error && (
-          <div className="text-red-500 mb-2 text-center">{error}</div>
-        )}
-
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="w-full px-4 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
-          />
-          <textarea
-            placeholder="Your Message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-            rows="5"
-            className="w-full px-4 py-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
-          ></textarea>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 text-white rounded-md transition transform hover:scale-105 ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
-            }`}
+            className="relative inline-flex items-center justify-center w-full px-6 py-3 overflow-hidden text-white transition-all bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none active:scale-95 shadow-lg hover:shadow-2xl"
           >
-            {loading ? 'Sending...' : 'Send Message'}
+            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-48 group-hover:h-48 opacity-10"></span>
+            <span className="relative z-10">{loading ? 'Sending...' : 'Send Message'}</span>
           </button>
         </form>
       </div>
+
+      {/* Tailwind Custom Animations */}
+      <style>
+        {`
+          @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes blob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+          }
+          .animate-blob {
+            animation: blob 7s infinite;
+          }
+          .animation-delay-2000 {
+            animation-delay: 2s;
+          }
+          .animation-delay-4000 {
+            animation-delay: 4s;
+          }
+          .animate-fade-in-up {
+            animation: fade-in-up 0.7s ease-out forwards;
+          }
+          .animate-fade-in {
+            animation: fade-in-up 0.5s ease-out;
+          }
+        `}
+      </style>
     </div>
   );
 };

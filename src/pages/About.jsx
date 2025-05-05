@@ -1,9 +1,4 @@
-import {
-  FaGithub,
-  FaLinkedin,
-  FaEnvelope,
-  FaPhone,
-} from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -36,16 +31,16 @@ const Sprinkle = ({ color, size, delay, duration, x }) => {
     <motion.div
       className="absolute"
       initial={{ y: -20, x, opacity: 1 }}
-      animate={{ 
-        y: "100vh", 
+      animate={{
+        y: "100vh",
         opacity: [1, 0.8, 0.6, 0.4, 0.2, 0],
-        rotate: [0, 180, 360, 540, 720]
+        rotate: [0, 180, 360, 540, 720],
       }}
-      transition={{ 
-        duration: duration, 
+      transition={{
+        duration: duration,
         delay: delay,
         repeat: Infinity,
-        ease: "linear"
+        ease: "linear",
       }}
       style={{
         width: size,
@@ -60,10 +55,17 @@ const Sprinkle = ({ color, size, delay, duration, x }) => {
 // SprinkleContainer component
 const SprinkleContainer = () => {
   const [sprinkles, setSprinkles] = useState([]);
-  
+
   useEffect(() => {
     // Generate 40 sprinkles with random properties
-    const colors = ["#22c55e", "#3b82f6", "#ef4444", "#f59e0b", "#8b5cf6", "#ec4899"];
+    const colors = [
+      "#22c55e",
+      "#3b82f6",
+      "#ef4444",
+      "#f59e0b",
+      "#8b5cf6",
+      "#ec4899",
+    ];
     const newSprinkles = Array.from({ length: 40 }).map((_, i) => ({
       id: i,
       color: colors[Math.floor(Math.random() * colors.length)],
@@ -72,10 +74,10 @@ const SprinkleContainer = () => {
       duration: Math.random() * 15 + 10,
       x: `${Math.random() * 100}%`,
     }));
-    
+
     setSprinkles(newSprinkles);
   }, []);
-  
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {sprinkles.map((sprinkle) => (
@@ -90,7 +92,7 @@ const About = () => {
     <div className="min-h-screen pt-24 px-6 py-12 bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-white relative overflow-hidden">
       {/* Sprinkle Animation */}
       <SprinkleContainer />
-      
+
       {/* Main Content with z-index to appear above sprinkles */}
       <div className="relative z-10">
         {/* Main Grid */}
@@ -124,7 +126,13 @@ const About = () => {
           >
             <h1 className="text-4xl font-bold text-green-600">Hadeed Ahmad</h1>
             <p className="text-lg leading-relaxed">
-              I'm a passionate Front-End Developer and Intermediate Graphic Designer based in Pakistan. Skilled in crafting responsive websites with HTML, CSS, and JavaScript, I bring visual ideas to life using Adobe Illustrator and modern design trends. I'm currently advancing in Python and exploring the AI development world — building projects like ELARA AI and Astro Nova to merge creativity with code.
+              I'm a passionate Front-End Developer and Intermediate Graphic
+              Designer based in Pakistan. Skilled in crafting responsive
+              websites with HTML, CSS, and JavaScript, I bring visual ideas to
+              life using Adobe Illustrator and modern design trends. I'm
+              currently advancing in Python and exploring the AI development
+              world — building projects like ELARA AI and Astro Nova to merge
+              creativity with code.
             </p>
 
             {/* Contact Links */}
@@ -167,6 +175,119 @@ const About = () => {
             </div>
           </motion.div>
         </div>
+       {/* contributor section */}
+<div className="mt-24">
+  <h2 className="text-3xl font-semibold text-center mb-10 text-purple-600 dark:text-purple-400">
+    🌟 More Contributors
+  </h2>
+
+  <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
+    {/* Contributor 1 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+      whileHover={{ scale: 1.05 }}
+      className="relative bg-gradient-to-br from-[#5B21B6] via-purple-600 to-[#D946EF] text-white p-6 rounded-3xl shadow-2xl w-80 text-center overflow-hidden"
+    >
+      {/* Image with shine and zoom effect */}
+      <motion.div
+        className="relative w-28 h-28 mx-auto rounded-full overflow-hidden group"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src="/hamza_img.jpeg"
+          alt="Muhammad Hamza Hassaan"
+          className="w-full h-full object-cover border-4 border-white shadow-lg transition-transform duration-500 transform group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-full" />
+      </motion.div>
+
+      <h3 className="mt-4 text-xl font-bold">Muhammad Hamza Hassaan</h3>
+      <p className="text-sm italic px-2">
+        A Machine Learning enthusiast skilled in React and Node.js,
+        passionate about building intelligent, scalable web applications.
+      </p>
+      <motion.div
+        className="mt-4 flex justify-center gap-6 text-white text-2xl"
+        whileHover={{ scale: 1.1 }}
+      >
+        <motion.a
+          href="https://github.com/M-Hamza-Hassaan"
+          target="_blank"
+          rel="noreferrer"
+          whileHover={{ y: -5, color: "#000000" }}
+          transition={{ type: "spring", stiffness: 200 }}
+        >
+          <FaGithub />
+        </motion.a>
+        <motion.a
+          href="https://www.linkedin.com/in/muhammad-hamza-hassaan/"
+          target="_blank"
+          rel="noreferrer"
+          whileHover={{ y: -5, color: "#0e76a8" }}
+          transition={{ type: "spring", stiffness: 200 }}
+        >
+          <FaLinkedin />
+        </motion.a>
+      </motion.div>
+    </motion.div>
+
+    {/* Contributor 2 */}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+      whileHover={{ scale: 1.05 }}
+      className="relative bg-white dark:bg-gradient-to-tr dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white p-6 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] w-80 text-center overflow-hidden"
+    >
+      {/* Image with shine and zoom effect */}
+      <motion.div
+        className="relative w-28 h-28 mx-auto rounded-full overflow-hidden group"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src="/saad_img.jpg"
+          alt="Muhammad Saad"
+          className="w-full h-full object-cover border-4 border-green-400 shadow-xl transition-transform duration-500 transform group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-full" />
+      </motion.div>
+
+      <h3 className="mt-4 text-xl font-bold">Muhammad Saad</h3>
+      <p className="text-sm italic px-2">
+        A versatile developer with expertise in Generative AI, SEO
+        optimization, and modern full-stack web technologies.
+      </p>
+      <motion.div
+        className="mt-4 flex justify-center gap-6 text-green-500 text-2xl"
+        whileHover={{ scale: 1.1 }}
+      >
+        <motion.a
+          href="https://github.com/saadali451"
+          target="_blank"
+          rel="noreferrer"
+          whileHover={{ y: -5, color: "#171515" }}
+          transition={{ type: "spring", stiffness: 200 }}
+        >
+          <FaGithub />
+        </motion.a>
+        <motion.a
+          href="https://www.linkedin.com/in/muhammad-saad-00a246349/"
+          target="_blank"
+          rel="noreferrer"
+          whileHover={{ y: -5, color: "#0e76a8" }}
+          transition={{ type: "spring", stiffness: 200 }}
+        >
+          <FaLinkedin />
+        </motion.a>
+      </motion.div>
+    </motion.div>
+  </div>
+</div>
+
 
         {/* Project Gallery */}
         <div className="mt-20">
@@ -183,7 +304,9 @@ const About = () => {
                 viewport={{ once: true }}
                 className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition"
               >
-                <h3 className="text-xl font-bold text-green-500 mb-2">{project.name}</h3>
+                <h3 className="text-xl font-bold text-green-500 mb-2">
+                  {project.name}
+                </h3>
                 <p className="text-sm mb-3">
                   <strong>Tech:</strong> {project.tech.join(", ")}
                 </p>
