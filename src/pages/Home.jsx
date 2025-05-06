@@ -124,8 +124,8 @@ const Home = () => {
       </button>
 
       {/* Hero Section */}
-      <div className="relative w-full h-[75vh] flex items-center justify-center text-center mt-20 rounded-lg overflow-hidden">
-        <img
+      <div className="relative w-full h-[75vh] flex items-center justify-center mt-20 text-center overflow-hidden">
+      <img
           src="/banner.jpg"
           alt="Movie Background"
           className="absolute inset-0 w-full h-full object-cover brightness-75"
@@ -169,7 +169,7 @@ const Home = () => {
       </div>
 
       {/* About Section */}
-      <div className="p-6 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-6">
+      <div className="mt-16 px-6 max-w-6xl mx-auto flex flex-col md:flex-row gap-10 items-center">
         <div className="md:w-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold mb-4 text-center md:text-left text-gray-900 dark:text-white">
             Why Choose Movie Explorer?
@@ -230,7 +230,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="p-6 text-center">
+      <div className="mt-12 text-center">
         <Link
           to="/EditFavourites"
           className="inline-block px-6 py-3 text-lg font-medium bg-green-500 hover:bg-green-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
@@ -240,8 +240,8 @@ const Home = () => {
       </div>
 
       {/* Trending Movies Section */}
-      <div className="p-6" id="trending-movies">
-        <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
+      <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
+      <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
