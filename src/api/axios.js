@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default axios.create({
   // Change from https to http for local development
-  baseURL: "http://localhost:8000/api", // Django development server
+  baseURL: "movie-back-production-fe11.up.railway.app", // Django development server
   headers: {
 
     "Content-Type": "application/json",
