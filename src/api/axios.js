@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default axios.create({
   // Change from https to http for local development
-  baseURL: "https://movie-back-production-fe11.up.railway.app/api",
+  baseURL: import.meta.env.VITE_API_URL,
  // Django development server
   headers: {
 
