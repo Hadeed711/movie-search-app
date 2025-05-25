@@ -23,9 +23,10 @@ const SearchResults = ({ darkMode }) => {
         setError(null);
         const response = await axios.get(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`);
         setMovies(response.data.results);
-      } catch (err) {
-        setError("⚠️ Failed to fetch search results. Please try again.");
-      } finally {
+      } catch {
+              setError("⚠️ Failed to fetch search results. Please try again.");
+               }
+        finally {
         setLoading(false);
       }
     };

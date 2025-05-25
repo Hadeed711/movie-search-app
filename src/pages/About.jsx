@@ -1,5 +1,5 @@
 import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { motion as _motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const projects = [
@@ -28,7 +28,7 @@ const projects = [
 // Sprinkle component
 const Sprinkle = ({ color, size, delay, duration, x }) => {
   return (
-    <motion.div
+    <_motion.div
       className="absolute"
       initial={{ y: -20, x, opacity: 1 }}
       animate={{
@@ -98,13 +98,13 @@ const About = () => {
         {/* Main Grid */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           {/* Profile Image with hover animation */}
-          <motion.div
+          <_motion.div
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1 }}
             className="relative group"
           >
-            <motion.img
+            <_motion.img
               src="/profile.jpg"
               alt="Hadeed Ahmad"
               className="rounded-3xl w-72 h-96 object-cover shadow-2xl border-4 border-green-400 relative -left-16 group-hover:shadow-green-400 transition"
@@ -115,10 +115,10 @@ const About = () => {
               }}
               transition={{ type: "spring", stiffness: 300 }}
             />
-          </motion.div>
+          </_motion.div>
 
           {/* Bio Section */}
-          <motion.div
+          <_motion.div
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1 }}
@@ -137,22 +137,22 @@ const About = () => {
 
             {/* Contact Links */}
             <div className="space-y-3 pt-4">
-              <motion.a
+              <_motion.a
                 whileHover={{ scale: 1.05, rotate: 1 }}
                 className="flex items-center gap-3 text-blue-600 dark:text-blue-400 hover:underline"
                 href="mailto:hadeedahmad711@gmail.com"
               >
                 <FaEnvelope className="text-lg" />
                 hadeedahmad711@gmail.com
-              </motion.a>
-              <motion.p
+              </_motion.a>
+              <_motion.p
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center gap-3"
               >
                 <FaPhone className="text-lg" />
                 +92 324 1669274
-              </motion.p>
-              <motion.a
+              </_motion.p>
+              <_motion.a
                 whileHover={{ scale: 1.05, rotate: -2 }}
                 href="https://github.com/Hadeed711"
                 target="_blank"
@@ -161,8 +161,8 @@ const About = () => {
               >
                 <FaGithub className="text-xl" />
                 GitHub Profile
-              </motion.a>
-              <motion.a
+              </_motion.a>
+              <_motion.a
                 whileHover={{ scale: 1.05, rotate: 2 }}
                 href="https://www.linkedin.com/in/hadeed-ahmad-a15919277"
                 target="_blank"
@@ -171,9 +171,9 @@ const About = () => {
               >
                 <FaLinkedin className="text-xl" />
                 LinkedIn Profile
-              </motion.a>
+              </_motion.a>
             </div>
-          </motion.div>
+          </_motion.div>
         </div>
        {/* contributor section */}
 <div className="mt-24">
@@ -183,7 +183,7 @@ const About = () => {
 
   <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
     {/* Contributor 1 */}
-    <motion.div
+    <_motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
@@ -191,7 +191,7 @@ const About = () => {
       className="relative bg-gradient-to-br from-[#5B21B6] via-purple-600 to-[#D946EF] text-white p-6 rounded-3xl shadow-2xl w-80 text-center overflow-hidden"
     >
       {/* Image with shine and zoom effect */}
-      <motion.div
+      <_motion.div
         className="relative w-28 h-28 mx-auto rounded-full overflow-hidden group"
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.5 }}
@@ -202,18 +202,18 @@ const About = () => {
           className="w-full h-full object-cover border-4 border-white shadow-lg transition-transform duration-500 transform group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-full" />
-      </motion.div>
+      </_motion.div>
 
       <h3 className="mt-4 text-xl font-bold">Muhammad Hamza Hassaan</h3>
       <p className="text-sm italic px-2">
         A Machine Learning enthusiast skilled in React and Node.js,
         passionate about building intelligent, scalable web applications.
       </p>
-      <motion.div
+      <_motion.div
         className="mt-4 flex justify-center gap-6 text-white text-2xl"
         whileHover={{ scale: 1.1 }}
       >
-        <motion.a
+        <_motion.a
           href="https://github.com/M-Hamza-Hassaan"
           target="_blank"
           rel="noreferrer"
@@ -221,8 +221,8 @@ const About = () => {
           transition={{ type: "spring", stiffness: 200 }}
         >
           <FaGithub />
-        </motion.a>
-        <motion.a
+        </_motion.a>
+        <_motion.a
           href="https://www.linkedin.com/in/muhammad-hamza-hassaan/"
           target="_blank"
           rel="noreferrer"
@@ -230,12 +230,12 @@ const About = () => {
           transition={{ type: "spring", stiffness: 200 }}
         >
           <FaLinkedin />
-        </motion.a>
-      </motion.div>
-    </motion.div>
+        </_motion.a>
+      </_motion.div>
+    </_motion.div>
 
     {/* Contributor 2 */}
-    <motion.div
+    <_motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
@@ -243,7 +243,7 @@ const About = () => {
       className="relative bg-white dark:bg-gradient-to-tr dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white p-6 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] w-80 text-center overflow-hidden"
     >
       {/* Image with shine and zoom effect */}
-      <motion.div
+      <_motion.div
         className="relative w-28 h-28 mx-auto rounded-full overflow-hidden group"
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.5 }}
@@ -254,18 +254,18 @@ const About = () => {
           className="w-full h-full object-cover border-4 border-green-400 shadow-xl transition-transform duration-500 transform group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-full" />
-      </motion.div>
+      </_motion.div>
 
       <h3 className="mt-4 text-xl font-bold">Muhammad Saad</h3>
       <p className="text-sm italic px-2">
         A versatile developer with expertise in Generative AI, SEO
         optimization, and modern full-stack web technologies.
       </p>
-      <motion.div
+      <_motion.div
         className="mt-4 flex justify-center gap-6 text-green-500 text-2xl"
         whileHover={{ scale: 1.1 }}
       >
-        <motion.a
+        <_motion.a
           href="https://github.com/saadali451"
           target="_blank"
           rel="noreferrer"
@@ -273,8 +273,8 @@ const About = () => {
           transition={{ type: "spring", stiffness: 200 }}
         >
           <FaGithub />
-        </motion.a>
-        <motion.a
+        </_motion.a>
+        <_motion.a
           href="https://www.linkedin.com/in/muhammad-saad-00a246349/"
           target="_blank"
           rel="noreferrer"
@@ -282,9 +282,9 @@ const About = () => {
           transition={{ type: "spring", stiffness: 200 }}
         >
           <FaLinkedin />
-        </motion.a>
-      </motion.div>
-    </motion.div>
+        </_motion.a>
+      </_motion.div>
+    </_motion.div>
   </div>
 </div>
 
@@ -296,7 +296,7 @@ const About = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, idx) => (
-              <motion.div
+              <_motion.div
                 key={idx}
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -318,7 +318,7 @@ const About = () => {
                 >
                   View on GitHub →
                 </a>
-              </motion.div>
+              </_motion.div>
             ))}
           </div>
         </div>
