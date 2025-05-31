@@ -241,12 +241,29 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex space-x-8 items-center">
-        <Link to="/" className={linkClass}>Home</Link>
-        <Link to="/contact" className={linkClass}>Contact Us</Link>
-        <Link to="/about" className={linkClass}>About Me</Link>
+      <div className="hidden md:flex space-x-6 items-center">
+        <Link
+          to="/"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          Home
+        </Link>
+        <Link to="/contact" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
+          Contact Us
+        </Link>
+        <Link to="/about" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
+          About Me
+        </Link>
 
-        <a href="https://github.com/Hadeed711/Movie-Search-App" target="_blank" rel="noopener noreferrer" className={buttonClass}>
+        <a
+          href="https://github.com/Hadeed711/Movie-Search-App"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 rounded-md border 
+            border-gray-300 bg-gray-100 text-gray-800 
+            dark:bg-gray-800 dark:border-gray-500 dark:text-white 
+            hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+        >
           <FaGithub size={20} />
           <span>Check Repository</span>
         </a>
@@ -259,21 +276,41 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           <input
             type="text"
             placeholder="Search..."
-            className="p-2 rounded-l-md border bg-gray-200 text-gray-900 placeholder-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 border-gray-400 focus:outline-none"
+            className="p-2 rounded-md border 
+              bg-gray-200 text-gray-900 placeholder-gray-600
+              dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+              border-gray-400 focus:outline-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button type="submit" className="p-2 bg-blue-500 hover:bg-blue-600 rounded-r text-white">Go</button>
+          <button
+            type="submit"
+            className="p-2 bg-blue-500 hover:bg-blue-600 rounded-r"
+          >
+            Go
+          </button>
         </form>
       </div>
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="w-full mt-4 flex flex-col gap-4 md:hidden px-4 py-2">
-          <Link to="/" onClick={handleMenuToggle} className="px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Home</Link>
-          <Link to="/contact" onClick={handleMenuToggle} className="px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Contact Us</Link>
-          <Link to="/about" onClick={handleMenuToggle} className="px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">About Me</Link>
-          <a href="https://github.com/Hadeed711/Movie-Search-App" target="_blank" rel="noopener noreferrer" onClick={handleMenuToggle} className="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/contact" onClick={() => setMenuOpen(false)}>
+            Contact Us
+          </Link>
+          <Link to="/about" onClick={() => setMenuOpen(false)}>
+            About Me
+          </Link>
+          <a
+            href="https://github.com/your-repo-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2"
+            onClick={() => setMenuOpen(false)}
+          >
             <FaGithub size={20} />
             <span>Check Repository</span>
           </a>
