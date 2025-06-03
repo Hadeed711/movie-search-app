@@ -9,7 +9,8 @@ import Footer from "./components/Footer";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import EditFavourites from "./pages/EditFavourites";
-
+import Login from "./pages/Login";
+import Signup from "./pages/SignUp";
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
             <Route path="*" element={<NotFound darkMode={darkMode}/>} />
             <Route path="/contact" element={<ContactUs darkMode={darkMode} />} />
             <Route path="/EditFavourites" element={<EditFavourites darkMode={darkMode} />} />
+            <Route path="/login" element={<Login darkMode={darkMode} />} />
+<Route path="/signup" element={<Signup darkMode={darkMode} />} />
           </Routes>
         </div>
         <Footer darkMode={darkMode} />

@@ -76,6 +76,15 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         <Link to="/about" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
           About Me
         </Link>
+        <Link to="/login" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
+  Login
+</Link>
+<Link
+  to="/signup"
+  className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
+>
+  Sign Up
+</Link>
 
         <a
           href="https://github.com/Hadeed711/Movie-Search-App"
@@ -139,6 +148,16 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           <Link to="/about" onClick={() => setMenuOpen(false)}>
             About Me
           </Link>
+          <Link to="/login" onClick={() => setMenuOpen(false)}>
+  Login
+</Link>
+<Link
+  to="/signup"
+  onClick={() => setMenuOpen(false)}
+  className="px-4 py-2 rounded-md bg-blue-600 text-white text-center hover:bg-blue-700 transition-all duration-300"
+>
+  Sign Up
+</Link>
           <a
             href="https://github.com/your-repo-link"
             target="_blank"
