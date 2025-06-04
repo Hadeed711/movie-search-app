@@ -16,7 +16,7 @@ const ContactUs = ({ darkMode }) => {
     setError('');
 
     try {
-      const response = await axios.post('/api/contact/', { name, email, message });
+      const response = await axios.post('/contact/', { name, email, message });
       console.log("Response:", response.data);
       setSuccess(true);
       setName('');

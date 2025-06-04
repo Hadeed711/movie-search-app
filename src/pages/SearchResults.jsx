@@ -38,7 +38,7 @@ const SearchResults = ({ darkMode }) => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get("/api/favorites/");
+        const response = await axios.get("/favorites/");
         setFavorites(response.data);
       } catch (err) {
         console.error("Error fetching favorites:", err);
@@ -55,10 +55,10 @@ const SearchResults = ({ darkMode }) => {
     try {
       if (isFavorite) {
         const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
-        await axios.delete(`/api/favorites/${favorite.id}/`);
+        await axios.delete(`/favorites/${favorite.id}/`);
         setFavorites(prev => prev.filter(fav => fav.movie_id !== movie.id.toString()));
       } else {
-        const response = await axios.post("/api/favorites/", {
+        const response = await axios.post("/favorites/", {
           movie_id: movie.id.toString(),
           movie_title: movie.title,
           movie_poster: movie.poster_path,
