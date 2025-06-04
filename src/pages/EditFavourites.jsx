@@ -46,7 +46,7 @@ const EditFavourites = () => {
 
   const handleRemoveFavorite = async (id) => {
     try {
-      await axios.delete(`/favorites/${id}/`);
+      await axios.delete(`/api/favorites/${id}/`);
       setFavourites((prev) => prev.filter((fav) => fav.id !== id));
     } catch (err) {
       console.error('Error removing favourite:', err);

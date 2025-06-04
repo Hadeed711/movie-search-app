@@ -15,7 +15,7 @@ const Home = () => {
   // Fetch favorites to know which movies are already favorites
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get('/favorites/');
+      const response = await axios.get('/api/favorites/');
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -54,7 +54,7 @@ const Home = () => {
           // Find the favorite to delete it
           const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
           if (favorite) {
-            await axios.delete(`/favorites/${favorite.id}/`);
+            await axios.delete(`/api/favorites/${favorite.id}/`);
             // Update local state
             setFavorites(prevFavorites => 
               prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
@@ -62,7 +62,7 @@ const Home = () => {
           }
         } else {
           // Add to favorites
-          const response = await axios.post("/favorites/", {
+          const response = await axios.post("/api/favorites/", {
             movie_id: movie.id.toString(),
             movie_title: movie.title,
             movie_poster: movie.poster_path
