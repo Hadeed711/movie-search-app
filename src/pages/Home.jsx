@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react"; // Lucide for heart icon
+import { Heart } from "lucide-react";
 import tmdb from "../api/tmdb";
-import axios from "../api/axios"; // Make sure this points to your configured axios instance
+import axios from "../api/axios";
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
@@ -11,6 +11,8 @@ const Home = () => {
     localStorage.getItem("theme") === "dark"
   );
   const [animateLinks, setAnimateLinks] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch favorites to know which movies are already favorites
   const fetchFavorites = async () => {
@@ -22,18 +24,29 @@ const Home = () => {
     }
   };
 
+  const fetchTrendingMovies = async (page = 1) => {
+    try {
+      setIsLoading(true);
+      const response = await tmdb.get("/trending/movie/week", {
+        params: { page }
+      });
+      
+      if (page === 1) {
+        setMovies(response.data.results);
+      } else {
+        setMovies(prev => [...prev, ...response.data.results]);
+      }
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
-
-    const fetchTrendingMovies = async () => {
-      try {
-        const response = await tmdb.get("/trending/movie/week");
-        setMovies(response.data.results);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    };
 
     fetchTrendingMovies();
     fetchFavorites();
@@ -43,31 +56,30 @@ const Home = () => {
     }, 300);
   }, [darkMode]);
 
-  // MovieCard component (inline as in your original code)
+  const handleLoadMore = () => {
+    fetchTrendingMovies(currentPage + 1);
+  };
+
+  // MovieCard component
   const MovieCard = ({ movie }) => {
-    // Check if this movie is already in favorites
     const isFavorite = favorites.some(fav => fav.movie_id === movie.id.toString());
 
     const handleToggleFavorite = async () => {
       try {
         if (isFavorite) {
-          // Find the favorite to delete it
           const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
           if (favorite) {
             await axios.delete(`/favorites/${favorite.id}/`);
-            // Update local state
             setFavorites(prevFavorites => 
               prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
             );
           }
         } else {
-          // Add to favorites
           const response = await axios.post("/favorites/", {
             movie_id: movie.id.toString(),
             movie_title: movie.title,
             movie_poster: movie.poster_path
           });
-          // Update local state
           setFavorites(prevFavorites => [...prevFavorites, response.data]);
         }
       } catch (error) {
@@ -77,7 +89,6 @@ const Home = () => {
 
     return (
       <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
-        {/* Add to Favourites Icon */}
         <button
           onClick={handleToggleFavorite}
           className={`absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow hover:bg-gray-100 dark:hover:bg-gray-600 transition ${
@@ -125,7 +136,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="relative w-full h-[75vh] flex items-center justify-center mt-20 text-center overflow-hidden">
-      <img
+        <img
           src="/banner.jpg"
           alt="Movie Background"
           className="absolute inset-0 w-full h-full object-cover brightness-75"
@@ -241,11 +252,22 @@ const Home = () => {
 
       {/* Trending Movies Section */}
       <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
-      <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
+        <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
+        </div>
+        
+        {/* Load More Button */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleLoadMore}
+            disabled={isLoading}
+            className="px-6 py-3 text-lg font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? 'Loading...' : 'Load More'}
+          </button>
         </div>
       </div>
     </div>
