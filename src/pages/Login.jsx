@@ -18,7 +18,7 @@ const Login = ({ darkMode }) => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", response.data.token);
         navigate("/");
       } else {
         setError(data.message || "Login failed");
