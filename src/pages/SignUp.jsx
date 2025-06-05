@@ -18,7 +18,7 @@ const Signup = ({ darkMode }) => {
     }
 
     try {
-      const response = await fetch("https://api.your-app.com/auth/signup", {
+      const response = await fetch("https://movie-search-api.vercel.app/api/auth/users/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -26,10 +26,10 @@ const Signup = ({ darkMode }) => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", response.data.token);
-        navigate("/");
+        localStorage.setItem("token", data.token);
+        navigate("/login"); 
       } else {
-        setError(data.message || "Signup failed");
+        setError(data?.detail || data?.message || "Signup failed");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
