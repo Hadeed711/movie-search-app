@@ -40,25 +40,48 @@ const Home = () => {
   };
   const recommendedMovies = getRecommendedMovies(movies);
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  const fetchAllMovies = async () => {
+    try {
+      // Fetch trending (for trending section)
+      const trendingResponse = await tmdb.get("/trending/movie/week");
 
-    const fetchTrendingMovies = async () => {
-      try {
-        const response = await tmdb.get("/trending/movie/week");
-        setMovies(response.data.results);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    };
+      // Fetch popular movies for recommendation variety
+      const popularResponse = await tmdb.get("/movie/popular");
 
-    fetchTrendingMovies();
-    fetchFavorites();
+      // Fetch a page from the "discover" endpoint with older movies
+      const oldMoviesResponse = await tmdb.get("/discover/movie", {
+        params: {
+          sort_by: "release_date.asc", // older movies
+          page: Math.floor(Math.random() * 10) + 1, // random page for diversity
+          "release_date.lte": new Date().toISOString().split("T")[0], // up to today
+        },
+      });
 
-    setTimeout(() => {
-      setAnimateLinks(true);
-    }, 300);
-  }, [darkMode]);
+      // Combine and deduplicate by movie ID
+      const combinedMovies = [
+        ...trendingResponse.data.results,
+        ...popularResponse.data.results,
+        ...oldMoviesResponse.data.results,
+      ];
+
+      const uniqueMovies = [
+        ...new Map(combinedMovies.map((m) => [m.id, m])).values(),
+      ];
+
+      setMovies(uniqueMovies);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  };
+
+  fetchAllMovies();
+  fetchFavorites();
+
+  setTimeout(() => {
+    setAnimateLinks(true);
+  }, 300);
+}, [darkMode]);
+
 
   // MovieCard component (inline as in your original code)
   const MovieCard = ({ movie }) => {
