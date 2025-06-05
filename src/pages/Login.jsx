@@ -10,9 +10,13 @@ const Login = ({ darkMode }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/jwt/create/", {
+      // ✅ Fixed: Use your Railway backend URL instead of localhost
+      const response = await fetch("https://web-production-94cb.up.railway.app/auth/jwt/create/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
         body: JSON.stringify({
           email,
           password,
@@ -27,11 +31,11 @@ const Login = ({ darkMode }) => {
         localStorage.setItem("refresh_token", data.refresh);
         navigate("/");
       } else {
-        setError(data.detail || "Login failed");
+        setError(data.detail || data.message || data.error || "Login failed");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
-      console.error(err);
+      console.error("Login error:", err);
     }
   };
 

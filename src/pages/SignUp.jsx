@@ -18,21 +18,27 @@ const Signup = ({ darkMode }) => {
     }
 
     try {
-      const response = await fetch("https://movie-search-app-ten-eta.vercel.app/api/auth/users/", {
+      // ✅ Fixed: Use your Railway backend URL
+      const response = await fetch("https://web-production-94cb.up.railway.app/auth/users/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          // Add CORS headers if needed
+          "Accept": "application/json",
+        },
         body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        // ✅ Success - redirect to login page
         navigate("/login"); 
       } else {
-        setError(data?.detail || data?.message || "Signup failed");
+        setError(data?.detail || data?.message || data?.error || "Signup failed");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
+      console.error("Signup error:", err);
     }
   };
 
