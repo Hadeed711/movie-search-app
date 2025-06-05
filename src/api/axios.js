@@ -1,13 +1,20 @@
 // src/api/axios.js
 import axios from "axios";
 
-export default axios.create({
-  // Change from https to http for local development
+const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
- // Django development server
   headers: {
-
     "Content-Type": "application/json",
   },
 });
 
+// Add JWT token if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default api;
