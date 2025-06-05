@@ -11,7 +11,7 @@ import ContactUs from "./pages/ContactUs";
 import EditFavourites from "./pages/EditFavourites";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
-import Logout from "./components/Logout";
+import Logout from "./pages/Logout";
 
 function App() {
   const [darkMode, setDarkMode] = useState(
