@@ -6,6 +6,7 @@ import axios from "../api/axios"; // Make sure this points to your configured ax
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
+
   const [favorites, setFavorites] = useState([]);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
@@ -15,13 +16,29 @@ const Home = () => {
   // Fetch favorites to know which movies are already favorites
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get('/favorites/');
+      const response = await axios.get("/favorites/");
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     }
   };
+  const getRecommendedMovies = (movies) => {
+    const hour = new Date().getHours();
 
+    // Morning to evening
+    if (hour >= 6 && hour < 18) {
+      return movies.filter(
+        (movie) =>
+          movie.genre_ids?.includes(35) || movie.genre_ids?.includes(10751)
+      );
+    }
+
+    // Evening to night
+    return movies.filter(
+      (movie) => movie.genre_ids?.includes(28) || movie.genre_ids?.includes(53)
+    );
+  };
+  const recommendedMovies = getRecommendedMovies(movies);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
@@ -46,18 +63,24 @@ const Home = () => {
   // MovieCard component (inline as in your original code)
   const MovieCard = ({ movie }) => {
     // Check if this movie is already in favorites
-    const isFavorite = favorites.some(fav => fav.movie_id === movie.id.toString());
+    const isFavorite = favorites.some(
+      (fav) => fav.movie_id === movie.id.toString()
+    );
 
     const handleToggleFavorite = async () => {
       try {
         if (isFavorite) {
           // Find the favorite to delete it
-          const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
+          const favorite = favorites.find(
+            (fav) => fav.movie_id === movie.id.toString()
+          );
           if (favorite) {
             await axios.delete(`/favorites/${favorite.id}/`);
             // Update local state
-            setFavorites(prevFavorites => 
-              prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
+            setFavorites((prevFavorites) =>
+              prevFavorites.filter(
+                (fav) => fav.movie_id !== movie.id.toString()
+              )
             );
           }
         } else {
@@ -65,10 +88,10 @@ const Home = () => {
           const response = await axios.post("/favorites/", {
             movie_id: movie.id.toString(),
             movie_title: movie.title,
-            movie_poster: movie.poster_path
+            movie_poster: movie.poster_path,
           });
           // Update local state
-          setFavorites(prevFavorites => [...prevFavorites, response.data]);
+          setFavorites((prevFavorites) => [...prevFavorites, response.data]);
         }
       } catch (error) {
         console.error("Failed to toggle favorite:", error);
@@ -125,7 +148,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="relative w-full h-[75vh] flex items-center justify-center mt-20 text-center overflow-hidden">
-      <img
+        <img
           src="/banner.jpg"
           alt="Movie Background"
           className="absolute inset-0 w-full h-full object-cover brightness-75"
@@ -136,7 +159,8 @@ const Home = () => {
             Discover <span className="text-blue-400">Epic Movies</span>
           </h1>
           <p className="mt-4 text-lg md:text-xl font-light text-gray-300">
-            Explore thousands of movies, TV shows, and exclusive content at your fingertips.
+            Explore thousands of movies, TV shows, and exclusive content at your
+            fingertips.
           </p>
           <div
             className={`mt-6 flex flex-col sm:flex-row gap-4 justify-center transition-transform duration-700 ${
@@ -238,10 +262,25 @@ const Home = () => {
           Edit My Favourites
         </Link>
       </div>
+      {/* Recommended Section */}
+      <div className="mt-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">Recommended for You</h2>
+        {recommendedMovies.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {recommendedMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 dark:text-gray-400">
+            No recommendations available at this time.
+          </p>
+        )}
+      </div>
 
       {/* Trending Movies Section */}
       <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
-      <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
+        <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
