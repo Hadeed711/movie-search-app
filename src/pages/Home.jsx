@@ -6,7 +6,6 @@ import axios from "../api/axios"; // Make sure this points to your configured ax
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
-
   const [favorites, setFavorites] = useState([]);
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
@@ -22,66 +21,54 @@ const Home = () => {
       console.error("Error fetching favorites:", error);
     }
   };
-  const getRecommendedMovies = (movies) => {
-    const hour = new Date().getHours();
 
-    // Morning to evening
-    if (hour >= 6 && hour < 18) {
-      return movies.filter(
-        (movie) =>
-          movie.genre_ids?.includes(35) || movie.genre_ids?.includes(10751)
-      );
-    }
-
-    // Evening to night
-    return movies.filter(
-      (movie) => movie.genre_ids?.includes(28) || movie.genre_ids?.includes(53)
-    );
-  };
-  const recommendedMovies = getRecommendedMovies(movies);
   useEffect(() => {
-  const fetchAllMovies = async () => {
-    try {
-      // Fetch trending (for trending section)
-      const trendingResponse = await tmdb.get("/trending/movie/week");
+    const fetchAllMovies = async () => {
+      try {
+        // Fetch trending (for trending section)
+        const trendingResponse = await tmdb.get("/trending/movie/week");
 
-      // Fetch popular movies for recommendation variety
-      const popularResponse = await tmdb.get("/movie/popular");
+        // Fetch popular movies for recommendation variety
+        const popularResponse = await tmdb.get("/movie/popular");
 
-      // Fetch a page from the "discover" endpoint with older movies
-      const oldMoviesResponse = await tmdb.get("/discover/movie", {
-        params: {
-          sort_by: "release_date.asc", // older movies
-          page: Math.floor(Math.random() * 10) + 1, // random page for diversity
-          "release_date.lte": new Date().toISOString().split("T")[0], // up to today
-        },
-      });
+        // Fetch a page from the "discover" endpoint with older movies
+        const oldMoviesResponse = await tmdb.get("/discover/movie", {
+          params: {
+            sort_by: "release_date.asc", // older movies
+            page: Math.floor(Math.random() * 10) + 1, // random page for diversity
+            "release_date.lte": new Date().toISOString().split("T")[0], // up to today
+          },
+        });
 
-      // Combine and deduplicate by movie ID
-      const combinedMovies = [
-        ...trendingResponse.data.results,
-        ...popularResponse.data.results,
-        ...oldMoviesResponse.data.results,
-      ];
+        // Combine and deduplicate by movie ID
+        const combinedMovies = [
+          ...trendingResponse.data.results,
+          ...popularResponse.data.results,
+          ...oldMoviesResponse.data.results,
+        ];
 
-      const uniqueMovies = [
-        ...new Map(combinedMovies.map((m) => [m.id, m])).values(),
-      ];
+        const uniqueMovies = [
+          ...new Map(combinedMovies.map((m) => [m.id, m])).values(),
+        ];
 
-      setMovies(uniqueMovies);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-    }
-  };
+        setMovies(uniqueMovies);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
 
-  fetchAllMovies();
-  fetchFavorites();
+    fetchAllMovies();
+    fetchFavorites();
 
-  setTimeout(() => {
-    setAnimateLinks(true);
-  }, 300);
-}, [darkMode]);
+    setTimeout(() => {
+      setAnimateLinks(true);
+    }, 300);
+  }, [darkMode]);
 
+  // Filter movies by genre
+  const trendingMovies = movies;
+  const actionMovies = movies.filter((movie) => movie.genre_ids?.includes(28));
+  const cartoonMovies = movies.filter((movie) => movie.genre_ids?.includes(16));
 
   // MovieCard component (inline as in your original code)
   const MovieCard = ({ movie }) => {
@@ -122,7 +109,7 @@ const Home = () => {
     };
 
     return (
-      <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
+      <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700 min-w-[200px]">
         {/* Add to Favourites Icon */}
         <button
           onClick={handleToggleFavorite}
@@ -285,29 +272,40 @@ const Home = () => {
           Edit My Favourites
         </Link>
       </div>
-      {/* Recommended Section */}
-      <div className="mt-16 px-6 max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Recommended for You</h2>
-        {recommendedMovies.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {recommendedMovies.map((movie) => (
+
+      {/* Trending Movies Section */}
+      <div className="my-16 px-6 max-w-6xl mx-auto" id="trending-movies">
+        <h2 className="text-2xl font-bold mb-4">🔥 Trending Movies</h2>
+        <div className="overflow-x-auto pb-4">
+          <div className="flex space-x-4" style={{ minWidth: `${trendingMovies.length * 224}px` }}>
+            {trendingMovies.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400">
-            No recommendations available at this time.
-          </p>
-        )}
+        </div>
       </div>
 
-      {/* Trending Movies Section */}
-      <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
-        <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
+      {/* Action Movies Section */}
+      <div className="my-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">🎬 Action Movies</h2>
+        <div className="overflow-x-auto pb-4">
+          <div className="flex space-x-4" style={{ minWidth: `${actionMovies.length * 224}px` }}>
+            {actionMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Cartoon Movies Section */}
+      <div className="my-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">🧸 Cartoon Movies</h2>
+        <div className="overflow-x-auto pb-4">
+          <div className="flex space-x-4" style={{ minWidth: `${cartoonMovies.length * 224}px` }}>
+            {cartoonMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
