@@ -76,6 +76,9 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         <Link to="/about" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
           About Me
         </Link>
+         <Link to="/logout" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
+        Logout
+      </Link>
         <Link to="/login" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
   Login
 </Link>
