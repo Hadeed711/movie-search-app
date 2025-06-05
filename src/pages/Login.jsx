@@ -8,36 +8,42 @@ const Login = ({ darkMode }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // ✅ Fixed: Use your Railway backend URL instead of localhost
-      const response = await fetch("https://web-production-94cb.up.railway.app/auth/jwt/create/", {
+  e.preventDefault();
+  try {
+    const response = await fetch(
+      "https://web-production-94cb.up.railway.app/auth/jwt/create/",
+      {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Accept": "application/json",
         },
         body: JSON.stringify({
-          email,
+          username: email, // ⚠️ Use email as username (if backend allows)
+          // OR fetch username from backend if needed
           password,
         }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // ✅ Save tokens to localStorage
-        localStorage.setItem("access_token", data.access);
-        localStorage.setItem("refresh_token", data.refresh);
-        navigate("/");
-      } else {
-        setError(data.detail || data.message || data.error || "Login failed");
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      console.error("Login error:", err);
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      navigate("/");
+    } else {
+      // ⚠️ Improved error handling for Django REST
+      setError(
+        data.detail || 
+        Object.values(data).flat().join(" ") || 
+        "Login failed"
+      );
     }
-  };
+  } catch (err) {
+    setError("Network error. Please try again.");
+    console.error("Login error:", err);
+  }
+};
 
   return (
     <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
