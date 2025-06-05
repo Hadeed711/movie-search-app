@@ -15,7 +15,7 @@ const Home = () => {
   // Fetch favorites to know which movies are already favorites
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get("/favorites/");
+      const response = await axios.get('/favorites/');
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -23,41 +23,19 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const fetchAllMovies = async () => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+
+    const fetchTrendingMovies = async () => {
       try {
-        // Fetch trending (for trending section)
-        const trendingResponse = await tmdb.get("/trending/movie/week");
-
-        // Fetch popular movies for recommendation variety
-        const popularResponse = await tmdb.get("/movie/popular");
-
-        // Fetch a page from the "discover" endpoint with older movies
-        const oldMoviesResponse = await tmdb.get("/discover/movie", {
-          params: {
-            sort_by: "release_date.asc", // older movies
-            page: Math.floor(Math.random() * 10) + 1, // random page for diversity
-            "release_date.lte": new Date().toISOString().split("T")[0], // up to today
-          },
-        });
-
-        // Combine and deduplicate by movie ID
-        const combinedMovies = [
-          ...trendingResponse.data.results,
-          ...popularResponse.data.results,
-          ...oldMoviesResponse.data.results,
-        ];
-
-        const uniqueMovies = [
-          ...new Map(combinedMovies.map((m) => [m.id, m])).values(),
-        ];
-
-        setMovies(uniqueMovies);
+        const response = await tmdb.get("/trending/movie/week");
+        setMovies(response.data.results);
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
     };
 
-    fetchAllMovies();
+    fetchTrendingMovies();
     fetchFavorites();
 
     setTimeout(() => {
@@ -65,32 +43,21 @@ const Home = () => {
     }, 300);
   }, [darkMode]);
 
-  // Filter movies by genre
-  const trendingMovies = movies;
-  const actionMovies = movies.filter((movie) => movie.genre_ids?.includes(28));
-  const cartoonMovies = movies.filter((movie) => movie.genre_ids?.includes(16));
-
   // MovieCard component (inline as in your original code)
   const MovieCard = ({ movie }) => {
     // Check if this movie is already in favorites
-    const isFavorite = favorites.some(
-      (fav) => fav.movie_id === movie.id.toString()
-    );
+    const isFavorite = favorites.some(fav => fav.movie_id === movie.id.toString());
 
     const handleToggleFavorite = async () => {
       try {
         if (isFavorite) {
           // Find the favorite to delete it
-          const favorite = favorites.find(
-            (fav) => fav.movie_id === movie.id.toString()
-          );
+          const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
           if (favorite) {
             await axios.delete(`/favorites/${favorite.id}/`);
             // Update local state
-            setFavorites((prevFavorites) =>
-              prevFavorites.filter(
-                (fav) => fav.movie_id !== movie.id.toString()
-              )
+            setFavorites(prevFavorites => 
+              prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
             );
           }
         } else {
@@ -98,10 +65,10 @@ const Home = () => {
           const response = await axios.post("/favorites/", {
             movie_id: movie.id.toString(),
             movie_title: movie.title,
-            movie_poster: movie.poster_path,
+            movie_poster: movie.poster_path
           });
           // Update local state
-          setFavorites((prevFavorites) => [...prevFavorites, response.data]);
+          setFavorites(prevFavorites => [...prevFavorites, response.data]);
         }
       } catch (error) {
         console.error("Failed to toggle favorite:", error);
@@ -109,7 +76,7 @@ const Home = () => {
     };
 
     return (
-      <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700 min-w-[200px]">
+      <div className="relative bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md transition-transform duration-300 hover:shadow-xl hover:scale-105 hover:bg-gray-50 dark:hover:bg-gray-700">
         {/* Add to Favourites Icon */}
         <button
           onClick={handleToggleFavorite}
@@ -158,7 +125,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <div className="relative w-full h-[75vh] flex items-center justify-center mt-20 text-center overflow-hidden">
-        <img
+      <img
           src="/banner.jpg"
           alt="Movie Background"
           className="absolute inset-0 w-full h-full object-cover brightness-75"
@@ -169,8 +136,7 @@ const Home = () => {
             Discover <span className="text-blue-400">Epic Movies</span>
           </h1>
           <p className="mt-4 text-lg md:text-xl font-light text-gray-300">
-            Explore thousands of movies, TV shows, and exclusive content at your
-            fingertips.
+            Explore thousands of movies, TV shows, and exclusive content at your fingertips.
           </p>
           <div
             className={`mt-6 flex flex-col sm:flex-row gap-4 justify-center transition-transform duration-700 ${
@@ -274,38 +240,12 @@ const Home = () => {
       </div>
 
       {/* Trending Movies Section */}
-      <div className="my-16 px-6 max-w-6xl mx-auto" id="trending-movies">
-        <h2 className="text-2xl font-bold mb-4">🔥 Trending Movies</h2>
-        <div className="overflow-x-auto pb-4">
-          <div className="flex space-x-4" style={{ minWidth: `${trendingMovies.length * 224}px` }}>
-            {trendingMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Action Movies Section */}
-      <div className="my-16 px-6 max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">🎬 Action Movies</h2>
-        <div className="overflow-x-auto pb-4">
-          <div className="flex space-x-4" style={{ minWidth: `${actionMovies.length * 224}px` }}>
-            {actionMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Cartoon Movies Section */}
-      <div className="my-16 px-6 max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">🧸 Cartoon Movies</h2>
-        <div className="overflow-x-auto pb-4">
-          <div className="flex space-x-4" style={{ minWidth: `${cartoonMovies.length * 224}px` }}>
-            {cartoonMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
+      <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
+      <h2 className="text-2xl font-bold mb-4">Trending Movies</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
         </div>
       </div>
     </div>
