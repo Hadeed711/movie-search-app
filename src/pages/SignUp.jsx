@@ -18,7 +18,7 @@ const Signup = ({ darkMode }) => {
     }
 
     try {
-      const response = await fetch("https://movie-search-api.vercel.app/api/auth/users/", {
+      const response = await fetch("https://movie-search-app-ten-eta.vercel.app/api/auth/users/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
