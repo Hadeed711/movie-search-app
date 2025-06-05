@@ -10,37 +10,49 @@ const Signup = ({ darkMode }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setError("Passwords don't match");
+  if (password !== confirmPassword) {
+    setError("Passwords don't match");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://web-production-94cb.up.railway.app/auth/users/", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        username, 
+        email, 
+        password,
+        re_password: confirmPassword // Some Django auth setups require this
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      // Handle Django's specific error responses
+      if (errorData.username) {
+        setError(`Username: ${errorData.username.join(' ')}`);
+      } else if (errorData.email) {
+        setError(`Email: ${errorData.email.join(' ')}`);
+      } else if (errorData.password) {
+        setError(`Password: ${errorData.password.join(' ')}`);
+      } else {
+        setError("Signup failed. Please check your details.");
+      }
       return;
     }
 
-    try {
-      // ✅ Fixed: Use your Railway backend URL
-      const response = await fetch("https://web-production-94cb.up.railway.app/auth/users/", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          // Add CORS headers if needed
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        // ✅ Success - redirect to login page
-        navigate("/login"); 
-      } else {
-        setError(data?.detail || data?.message || data?.error || "Signup failed");
-      }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      console.error("Signup error:", err);
-    }
-  };
+    // If successful, redirect to login
+    navigate("/login");
+  } catch (err) {
+    setError("Network error. Please try again.");
+    console.error("Signup error:", err);
+  }
+};
 
   return (
     <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
