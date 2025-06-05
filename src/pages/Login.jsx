@@ -2,48 +2,46 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({ darkMode }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(""); // Changed from email to username
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch(
-      "https://web-production-94cb.up.railway.app/auth/jwt/create/",
-      {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: email, // ⚠️ Use email as username (if backend allows)
-          // OR fetch username from backend if needed
-          password,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem("access_token", data.access);
-      localStorage.setItem("refresh_token", data.refresh);
-      navigate("/");
-    } else {
-      // ⚠️ Improved error handling for Django REST
-      setError(
-        data.detail || 
-        Object.values(data).flat().join(" ") || 
-        "Login failed"
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "https://web-production-94cb.up.railway.app/auth/jwt/create/",
+        {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username, // Now sending username directly
+            password,
+          }),
+        }
       );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
+        navigate("/");
+      } else {
+        setError(
+          data.detail || 
+          Object.values(data).flat().join(" ") || 
+          "Login failed. Please check your username and password."
+        );
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+      console.error("Login error:", err);
     }
-  } catch (err) {
-    setError("Network error. Please try again.");
-    console.error("Login error:", err);
-  }
-};
+  };
 
   return (
     <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
@@ -61,16 +59,16 @@ const Login = ({ darkMode }) => {
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                Email address
+              <label htmlFor="username" className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                Username
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
+                id="username"
+                name="username"
+                type="text"  // Changed from email to text
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
                   darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-900"
                 }`}
