@@ -13,39 +13,14 @@ const Home = () => {
   const [animateLinks, setAnimateLinks] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
-  // Check login status
-  const checkLoginStatus = () => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-    return !!token;
-  };
-
-  // Show login popup
-  const showLoginRequired = () => {
-    setShowLoginPopup(true);
-  };
-
-  // Fetch favorites
+  // Fetch favorites to know which movies are already favorites
   const fetchFavorites = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsLoggedIn(false);
-        return;
-      }
-
-      const response = await axios.get('/favorites/', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await axios.get('/favorites/');
       setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
-      setIsLoggedIn(false);
     }
   };
 
@@ -74,9 +49,7 @@ const Home = () => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
 
     fetchTrendingMovies();
-    if (checkLoginStatus()) {
-      fetchFavorites();
-    }
+    fetchFavorites();
 
     setTimeout(() => {
       setAnimateLinks(true);
@@ -87,35 +60,16 @@ const Home = () => {
     fetchTrendingMovies(currentPage + 1);
   };
 
-  // Handle view details click
-  const handleViewDetails = (e, movieId) => {
-    if (!checkLoginStatus()) {
-      e.preventDefault();
-      showLoginRequired();
-    }
-    // If logged in, the normal Link behavior will proceed
-  };
-
   // MovieCard component
   const MovieCard = ({ movie }) => {
     const isFavorite = favorites.some(fav => fav.movie_id === movie.id.toString());
 
     const handleToggleFavorite = async () => {
-      if (!checkLoginStatus()) {
-        showLoginRequired();
-        return;
-      }
-
       try {
-        const token = localStorage.getItem("token");
         if (isFavorite) {
           const favorite = favorites.find(fav => fav.movie_id === movie.id.toString());
           if (favorite) {
-            await axios.delete(`/favorites/${favorite.id}/`, {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            });
+            await axios.delete(`/favorites/${favorite.id}/`);
             setFavorites(prevFavorites => 
               prevFavorites.filter(fav => fav.movie_id !== movie.id.toString())
             );
@@ -125,19 +79,11 @@ const Home = () => {
             movie_id: movie.id.toString(),
             movie_title: movie.title,
             movie_poster: movie.poster_path
-          }, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
           });
           setFavorites(prevFavorites => [...prevFavorites, response.data]);
         }
       } catch (error) {
         console.error("Failed to toggle favorite:", error);
-        if (error.response?.status === 401) {
-          setIsLoggedIn(false);
-          showLoginRequired();
-        }
       }
     };
 
@@ -163,7 +109,6 @@ const Home = () => {
         </h3>
         <Link
           to={`/movie/${movie.id}`}
-          onClick={(e) => handleViewDetails(e, movie.id)}
           className="text-blue-500 dark:text-blue-400 mt-2 block hover:underline"
         >
           View Details
@@ -188,33 +133,6 @@ const Home = () => {
           {darkMode ? "🌙" : "☀️"}
         </span>
       </button>
-
-      {/* Login Popup */}
-      {showLoginPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4 dark:text-white">Login Required</h3>
-            <p className="mb-6 dark:text-gray-300">
-              You need to be logged in to access this feature.
-            </p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowLoginPopup(false)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-              >
-                Cancel
-              </button>
-              <Link
-                to="/login"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                onClick={() => setShowLoginPopup(false)}
-              >
-                Go to Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Hero Section */}
       <div className="relative w-full h-[75vh] flex items-center justify-center mt-20 text-center overflow-hidden">
@@ -323,16 +241,14 @@ const Home = () => {
         </div>
       </div>
 
-      {isLoggedIn && (
-        <div className="mt-12 text-center">
-          <Link
-            to="/EditFavourites"
-            className="inline-block px-6 py-3 text-lg font-medium bg-green-500 hover:bg-green-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
-          >
-            Edit My Favourites
-          </Link>
-        </div>
-      )}
+      <div className="mt-12 text-center">
+        <Link
+          to="/EditFavourites"
+          className="inline-block px-6 py-3 text-lg font-medium bg-green-500 hover:bg-green-600 text-white rounded-lg transition transform hover:scale-105 shadow-lg"
+        >
+          Edit My Favourites
+        </Link>
+      </div>
 
       {/* Trending Movies Section */}
       <div className="mt-16 px-6 max-w-6xl mx-auto" id="trending-movies">
