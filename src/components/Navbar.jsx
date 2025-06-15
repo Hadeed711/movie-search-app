@@ -3,11 +3,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaGithub, FaSun, FaMoon } from "react-icons/fa";
 
 const Navbar = ({ darkMode, setDarkMode }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("access_token");
+      setIsLoggedIn(!!token);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+const handleSearch = (e) => {
+  e.preventDefault();
+  if (!query.trim()) {
+    alert("Please enter a search query.");
+    return;
+  }
+  navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+  setQuery("");
+  setMenuOpen(false); // optional: close menu on mobile after search
+};
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,15 +45,6 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (query.trim()) {
-      navigate(`/search/${query}`);
-      setQuery("");
-      setMenuOpen(false); // Close mobile menu on search
-    }
-  };
-
   return (
     <nav
       className={`fixed top-0 left-0 w-full p-4 flex justify-between items-center flex-wrap transition-all duration-300 z-50 ${
@@ -36,6 +54,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
       {/* Logo */}
       <Link
         to="/"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         className="text-2xl font-bold relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
       >
         T-Stream
@@ -82,18 +101,22 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         >
           About Us
         </Link>
-        <Link
-          to="/logout"
-          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
-        >
-          Logout
-        </Link>
-        <Link
-          to="/login"
-          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
-        >
-          Login
-        </Link>
+        {isLoggedIn ? (
+          <Link
+            to="/logout"
+            className="relative transition duration-300 px-4 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700"
+          >
+            Logout
+          </Link>
+        ) : (
+          <Link
+            to="/login"
+            className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+          >
+            Login
+          </Link>
+        )}
+
         <Link
           to="/signup"
           className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
@@ -114,7 +137,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           <span>Check Repository</span>
         </a>
 
-        <button
+        <button type="button"
           onClick={() => setDarkMode(!darkMode)}
           className="p-2 rounded-full transition-all duration-300"
         >
@@ -163,9 +186,24 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           <Link to="/about" onClick={() => setMenuOpen(false)}>
             About Us
           </Link>
-          <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              to="/logout"
+              onClick={() => setMenuOpen(false)}
+              className="text-red-600 hover:text-red-800 font-semibold"
+            >
+              Logout
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="hover:text-blue-500"
+            >
+              Login
+            </Link>
+          )}
+
           <Link
             to="/signup"
             onClick={() => setMenuOpen(false)}
@@ -174,7 +212,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             Sign Up
           </Link>
           <a
-            href="https://github.com/your-repo-link"
+            href="https://github.com/Hadeed711/movie-search-app"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2"
