@@ -15,26 +15,27 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     setIsLoggedIn(!!token);
   }, []);
 
+  // Custom event listener for auth status
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleAuthChange = () => {
       const token = localStorage.getItem("access_token");
       setIsLoggedIn(!!token);
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    window.addEventListener("authChange", handleAuthChange);
+    return () => window.removeEventListener("authChange", handleAuthChange);
   }, []);
 
-const handleSearch = (e) => {
-  e.preventDefault();
-  if (!query.trim()) {
-    alert("Please enter a search query.");
-    return;
-  }
-  navigate(`/search?query=${encodeURIComponent(query.trim())}`);
-  setQuery("");
-  setMenuOpen(false); // optional: close menu on mobile after search
-};
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!query.trim()) {
+      alert("Please enter a search query.");
+      return;
+    }
+    navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+    setQuery("");
+    setMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +45,6 @@ const handleSearch = (e) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
   return (
     <nav
       className={`fixed top-0 left-0 w-full p-4 flex justify-between items-center flex-wrap transition-all duration-300 z-50 ${
@@ -54,7 +54,7 @@ const handleSearch = (e) => {
       {/* Logo */}
       <Link
         to="/"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="text-2xl font-bold relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
       >
         T-Stream
@@ -137,7 +137,8 @@ const handleSearch = (e) => {
           <span>Check Repository</span>
         </a>
 
-        <button type="button"
+        <button
+          type="button"
           onClick={() => setDarkMode(!darkMode)}
           className="p-2 rounded-full transition-all duration-300"
         >

@@ -20,6 +20,7 @@ const Logout = () => {
 
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
+        window.dispatchEvent(new Event("authChange")); 
 
         setLoading(false); // Stop loader
         alert("Successfully logged out!");
@@ -28,6 +29,7 @@ const Logout = () => {
         console.error("Logout failed:", error);
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
+        window.dispatchEvent(new Event("authChange")); 
 
         setLoading(false); // Stop loader
         alert("You have been logged out (even if API failed).");

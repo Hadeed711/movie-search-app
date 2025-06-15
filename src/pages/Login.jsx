@@ -27,10 +27,12 @@ const Login = ({ darkMode }) => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("access_token", data.access);
-        localStorage.setItem("refresh_token", data.refresh);
-        navigate("/");
-      } else {
+  localStorage.setItem("access_token", data.access);
+  localStorage.setItem("refresh_token", data.refresh);
+  window.dispatchEvent(new Event("authChange")); // 👈 Add this line
+  navigate("/");
+}
+ else {
         setError(
           data.detail || 
           Object.values(data).flat().join(" ") || 
