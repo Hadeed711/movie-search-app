@@ -8,9 +8,9 @@ const Footer = ({ darkMode }) => {
       }`}
     >
       <div className="container mx-auto">
-        <p className="text-lg font-semibold">MovieApp</p>
+        <p className="text-lg font-semibold">T-Stream</p>
         <p className="text-sm mt-2">
-          © {new Date().getFullYear()} MovieApp. All rights reserved.
+          © {new Date().getFullYear()} T-Stream. All rights reserved.
         </p>
         <div className="mt-4 space-x-4">
           <Link

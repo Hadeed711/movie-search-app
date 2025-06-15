@@ -38,7 +38,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         to="/"
         className="text-2xl font-bold relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
       >
-        MovieApp
+        T-Stream
       </Link>
 
       {/* Hamburger Icon with Full Cross Animation */}
@@ -70,24 +70,36 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         >
           Home
         </Link>
-        <Link to="/contact" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
+        <Link
+          to="/contact"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
           Contact Us
         </Link>
-        <Link to="/about" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
-          About Me
+        <Link
+          to="/about"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          About Us
         </Link>
-         <Link to="/logout" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
-        Logout
-      </Link>
-        <Link to="/login" className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300">
-  Login
-</Link>
-<Link
-  to="/signup"
-  className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
->
-  Sign Up
-</Link>
+        <Link
+          to="/logout"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          Logout
+        </Link>
+        <Link
+          to="/login"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          Login
+        </Link>
+        <Link
+          to="/signup"
+          className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300"
+        >
+          Sign Up
+        </Link>
 
         <a
           href="https://github.com/Hadeed711/Movie-Search-App"
@@ -149,18 +161,18 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             Contact Us
           </Link>
           <Link to="/about" onClick={() => setMenuOpen(false)}>
-            About Me
+            About Us
           </Link>
           <Link to="/login" onClick={() => setMenuOpen(false)}>
-  Login
-</Link>
-<Link
-  to="/signup"
-  onClick={() => setMenuOpen(false)}
-  className="px-4 py-2 rounded-md bg-blue-600 text-white text-center hover:bg-blue-700 transition-all duration-300"
->
-  Sign Up
-</Link>
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            onClick={() => setMenuOpen(false)}
+            className="px-4 py-2 rounded-md bg-blue-600 text-white text-center hover:bg-blue-700 transition-all duration-300"
+          >
+            Sign Up
+          </Link>
           <a
             href="https://github.com/your-repo-link"
             target="_blank"
