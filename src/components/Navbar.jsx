@@ -57,7 +57,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="text-2xl font-bold relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
       >
-        T-Stream
+        Mo-V
       </Link>
 
       {/* Hamburger Icon with Full Cross Animation */}
