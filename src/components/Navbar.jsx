@@ -161,11 +161,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         >
           <input
             type="text"
-            placeholder="Search for movies..."
-            className="p-2 pl-4 w-72 sm:w-96 border-none outline-none 
+            placeholder="Search..."
+            className="p-2 pl-4 border-none outline-none 
       bg-gray-200 text-gray-900 placeholder-gray-600
       dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
-      transition duration-300 ease-in-out focus:ring-2 focus:ring-blue-500"
+      focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -246,17 +246,17 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           >
             <input
               type="text"
-              placeholder="Search for movies..."
-              className="p-3 rounded-md border-none 
+              placeholder="Search..."
+              className="p-2 rounded-md border-none 
       bg-gray-200 text-gray-900 placeholder-gray-600
       dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
-      focus:ring-2 focus:ring-blue-500 transition duration-300"
+      focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
             <button
               type="submit"
-              className="p-3 bg-blue-500 hover:bg-blue-600 rounded-md text-white font-semibold
+              className="p-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white font-semibold
       transition duration-200 ease-in-out"
             >
               Go
