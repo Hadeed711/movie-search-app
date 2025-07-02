@@ -12,6 +12,7 @@ import EditFavourites from "./pages/EditFavourites";
 import Login from "./pages/Login";
 import Signup from "./pages/SignUp";
 import Logout from "./pages/Logout";
+import AIRecommend from './pages/AIRecommend';
 
 function App() {
   const [darkMode, setDarkMode] = useState(
@@ -58,6 +59,7 @@ function App() {
               element={<EditFavourites darkMode={darkMode} />}
             />
             <Route path="/login" element={<Login darkMode={darkMode} />} />
+            <Route path="/ai-recommend" element={<AIRecommend darkMode={darkMode}/>} />
             <Route path="/logout" element={<Logout darkMode={darkMode} />} />
             <Route path="/signup" element={<Signup darkMode={darkMode} />} />
           </Routes>

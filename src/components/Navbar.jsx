@@ -90,6 +90,12 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           Home
         </Link>
         <Link
+          to="/ai-recommend"
+          className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
+        >
+          AI Recommendation
+        </Link>
+        <Link
           to="/contact"
           className="relative transition duration-300 hover:text-blue-500 dark:hover:text-blue-300"
         >
@@ -184,6 +190,9 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         <div className="w-full mt-4 flex flex-col gap-4 md:hidden px-4 py-2">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             Home
+          </Link>
+          <Link to="/ai-recommend" onClick={() => setMenuOpen(false)}>
+            AI Recommendation
           </Link>
           <Link to="/contact" onClick={() => setMenuOpen(false)}>
             Contact Us
