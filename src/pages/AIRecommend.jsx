@@ -19,21 +19,26 @@ function AIRecommend() {
     setMovies([]);
 
     try {
-      const res = await fetch("https://web-production-94cb.up.railway.app/api/recommend/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        body: JSON.stringify({ prompt }),
-      });
+      const res = await fetch(
+        "https://web-production-94cb.up.railway.app/api/recommend/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          body: JSON.stringify({ prompt }),
+        }
+      );
 
       const data = await res.json();
       const text = data.recommendation || "No recommendation found.";
       setRecommendation(text);
 
       const extractedTitles = Array.from(
-        new Set([...text.matchAll(/(?:\d\.?\s)?([^:(\n]+)/g)].map((m) => m[1].trim()))
+        new Set(
+          [...text.matchAll(/(?:\d\.?\s)?([^:(\n]+)/g)].map((m) => m[1].trim())
+        )
       ).filter((title) => title.length > 1);
 
       const movieResults = [];
@@ -59,16 +64,22 @@ function AIRecommend() {
   };
 
   const handleToggleFavorite = async (movie) => {
-    const isFavorite = favorites.some((fav) => fav.movie_id === movie.id.toString());
+    const isFavorite = favorites.some(
+      (fav) => fav.movie_id === movie.id.toString()
+    );
 
     if (!isLoggedIn()) return;
 
     try {
       if (isFavorite) {
-        const favorite = favorites.find((fav) => fav.movie_id === movie.id.toString());
+        const favorite = favorites.find(
+          (fav) => fav.movie_id === movie.id.toString()
+        );
         if (favorite) {
           await axios.delete(`/favorites/${favorite.id}/`);
-          setFavorites((prev) => prev.filter((fav) => fav.movie_id !== movie.id.toString()));
+          setFavorites((prev) =>
+            prev.filter((fav) => fav.movie_id !== movie.id.toString())
+          );
         }
       } else {
         const response = await axios.post("/favorites/", {
@@ -113,8 +124,30 @@ function AIRecommend() {
         )}
 
         {!loading && recommendation && (
-          <div className="mt-6 p-4 bg-zinc-800 border-l-4 border-teal-400 rounded-md italic">
-            {recommendation}
+          <div className="mt-6 bg-zinc-800 border border-teal-400 rounded-md p-6">
+            <h2 className="text-xl font-semibold text-teal-300 mb-3">
+              🎯 AI's Recommendations
+            </h2>
+            <ul className="space-y-3 list-disc list-inside text-gray-300">
+              {recommendation
+                .split(/\d\.\s+/) // Split by numbered list like "1. ...", "2. ..."
+                .filter(Boolean)
+                .map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="bg-zinc-900 p-3 rounded-md border border-teal-700 transition transform hover:scale-[1.01] hover:border-teal-400 duration-300"
+                  >
+                    <span className="text-teal-200 font-bold">
+                      🎬 {item.split(":")[0]}
+                    </span>
+                    {item.includes(":") && (
+                      <p className="mt-1 text-sm text-gray-400">
+                        {item.split(":").slice(1).join(":").trim()}
+                      </p>
+                    )}
+                  </li>
+                ))}
+            </ul>
           </div>
         )}
       </div>
@@ -124,7 +157,9 @@ function AIRecommend() {
           <h2 className="text-2xl font-bold mb-4">🎥 Suggested Movies</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {movies.map((movie) => {
-              const isFavorite = favorites.some((fav) => fav.movie_id === movie.id.toString());
+              const isFavorite = favorites.some(
+                (fav) => fav.movie_id === movie.id.toString()
+              );
               return (
                 <div
                   key={movie.id}
@@ -135,9 +170,15 @@ function AIRecommend() {
                     className={`absolute top-2 right-2 p-2 rounded-full shadow transition ${
                       isFavorite ? "text-red-500" : "text-gray-400"
                     }`}
-                    title={isFavorite ? "Remove from Favourites" : "Add to Favourites"}
+                    title={
+                      isFavorite
+                        ? "Remove from Favourites"
+                        : "Add to Favourites"
+                    }
                   >
-                    <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
+                    <Heart
+                      className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`}
+                    />
                   </button>
 
                   <img
